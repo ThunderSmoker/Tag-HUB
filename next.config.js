@@ -5,7 +5,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
-    domains: ['lh3.googleusercontent.com','stickerly.pstatic.net'],
+    domains: ['lh3.googleusercontent.com', 'stickerly.pstatic.net'],
   },
   webpack(config, { webpack }) {
     // Add a rule for handling binary files
@@ -26,4 +26,19 @@ const nextConfig = {
   onError: () => {},
 };
 
-module.exports = nextConfig;
+module.exports = {
+  ...nextConfig,
+  async headers() {
+    return [
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
+};
