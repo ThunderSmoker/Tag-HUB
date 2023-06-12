@@ -1,0 +1,6 @@
+npx create-next-app@latest ./
+while using any react hook we have to declare componenet as client side by decloaring "use client" at the top
+
+error compnenets must be client components
+
+npm install bcrypt mongodb mongoose next-auth
