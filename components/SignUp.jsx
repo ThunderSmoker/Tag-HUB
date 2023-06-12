@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiFillGooglePlusCircle } from "react-icons/ai";
 import { signIn, getProviders } from "next-auth/react";
+import swal from "sweetalert";
 
 const SignUp = () => {
   const usernameRegex =
@@ -57,7 +58,7 @@ const SignUp = () => {
       password,
     };
 
-    console.log(userData);
+    // console.log(userData);
 
     // Reset error message
     setErrmsg("");
@@ -68,10 +69,14 @@ const SignUp = () => {
         password: userData.password,
         redirect: false,
       });
-      if (response.ok) {
+      if (response.error==null) {
         // Handle successful response
         console.log("User created successfully");
         window.location.href = "/";
+      }
+      else{
+        swal("Error", response.error, "error");
+        console.log(response.error);
       }
       // const response = await fetch("/api/usersignup", {
       //   method: "POST",

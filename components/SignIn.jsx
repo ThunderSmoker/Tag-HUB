@@ -24,7 +24,7 @@ const SignIn = () => {
       username,
       password,
     };
-    console.log(userData);
+    // console.log(userData);
     if (!username || !password) {
       setErrmsg("*Please fill all the fields");
       return;
@@ -44,11 +44,15 @@ const SignIn = () => {
       //   },
       //   body: JSON.stringify(userData),
       // });
-
-      if (response.ok) {
+      console.log(response);
+      if (response.error==null) {
         // Handle successful response
         console.log("User logged in successfully");
         window.location.href = "/";
+      }
+      else{
+        swal("Error", response.error, "error");
+        console.log(response.error);
       }
       // else if(response.status === 404){
       //   setErrmsg("User not found. Please check your username and password.");

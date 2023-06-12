@@ -43,14 +43,18 @@ const handler = NextAuth({
 
             // Authenticate the user
             const user = await MyUser.findOne({ username });
-            if (user && user.password===password) {
+       
+            if (user && user.password==password) {
+           
               return Promise.resolve(user);
             } else {
+          
               throw new Error("Invalid credentials");
             }
           }
         } catch (error) {
           console.log("Error authenticating user: ", error.message);
+          throw new Error(error.message);
           return Promise.resolve(null);
         }
       },
@@ -66,17 +70,22 @@ const handler = NextAuth({
   },
   callbacks: {
     async session({ session, user }) {
-      if (user) {
+     
+      if (session) {
         // Store the user id from MongoDB to the session
+        console.log("Session"+session.user.image);
         let userModel;
-        if (user.provider === 'credentials') {
-          userModel = await MyUser.findOne({email: user.email });
+        if ((session.user.image).startsWith("https://lh3.googleusercontent.com")) {
+       
+          userModel = await User.findOne({email: session.user.email });
         } else {
-          userModel = await User.findOne({ email: user.email });
+          userModel = await MyUser.findOne({ email: session.user.email });
         }
         
+        console.log("userModel",userModel);
         session.user.id = userModel._id.toString();
       }
+      console.log(session);
       session.expires = Math.floor(Date.now() / 1000) + 7200;
       return session;
     },
@@ -98,8 +107,9 @@ const handler = NextAuth({
       } else if (account.provider === 'credentials') {
         // Handle credentials sign-in
         // Check if user already exists
-        console.log(credentials);
-        const userExists = await MyUser.findOne({ username: credentials.username });
+        const { username} = credentials;
+        const userExists = await MyUser.findOne({ username});
+        
 
         // If not, throw an error since the user is not signed up
         if (!userExists) {

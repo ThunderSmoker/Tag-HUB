@@ -13,7 +13,6 @@ const Nav = () => {
 
   useEffect(() => {
     (async () => {
-      console.log((session?.user));
       const res = await getProviders();
       setProviders(res);
     })();

@@ -14,24 +14,25 @@ const MyProfile = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-
-      const userData = {
-        email: session?.user.email,
-      };
-      const response = await fetch(`/api/users/${session?.user.id}/posts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+     
+      // const userData = {
+      //   email: session?.user.email,
+      // };
+      const response = await fetch(`/api/users/${session?.user.id}/posts`,);
+      // const response = await fetch(`/api/users/${session?.user.id}/posts`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(userData),
+      // });
       const data = await response.json();
 
       setMyPosts(data);
     };
 
-    if (session?.user.email) fetchPosts();
-  }, [session?.user.email]);
+    if (session?.user.id) fetchPosts();
+  }, [session?.user.id]);
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);

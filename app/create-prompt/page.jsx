@@ -18,12 +18,19 @@ const CreatePrompt = () => {
     setIsSubmitting(true);
 
     try {
-      console.log(session?.user.email);
+      let creatorModel;
+      if ((session.user.image).startsWith("https://lh3.googleusercontent.com")) {
+        creatorModel="User"
+      } else {
+        creatorModel="MyUser"
+      }
+      console.log(session.user.id);
       const response = await fetch("/api/prompt/new", {
         method: "POST",
         body: JSON.stringify({
           prompt: post.prompt,
-          email: session?.user.email,
+          userId: session?.user.id,
+          creatorModel,
           tag: post.tag,
         }),
       });
