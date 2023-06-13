@@ -1,21 +1,12 @@
-'use client'
-
-import Feed from "@components/Feed";
-
-const Home = () => (
-  <section className='w-full flex-center flex-col'>
-    <h1 className='head_text text-center'>
-      Discover & Share
-      <br className='max-md:hidden' />
-      <span className='orange_gradient text-center'>Mind Trembling Thoughts</span>
-    </h1>
-    <p className='desc text-center'>
-      TagHUB is an open-source Thoughhts Sharing Platform for modern world to
-      discover, create and share creative thoughts
-    </p>
-
-    <Feed />
-  </section>
-);
+"use client";
+import { useRouter } from "next/navigation";
+const Home = () => {
+  const router = useRouter();
+  return (
+    <section className="w-full flex-center flex-col">
+      <button onClick={()=>{router.push('/home')}} className="outline_btn">hello</button>
+    </section>
+  );
+};
 
 export default Home;
