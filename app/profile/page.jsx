@@ -9,7 +9,6 @@ import Profile from "@components/Profile";
 const MyProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const [hasConfirmed, sethasConfirmed] = useState(false);
   const [myPosts, setMyPosts] = useState([]);
 
   useEffect(() => {
