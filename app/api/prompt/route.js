@@ -7,8 +7,13 @@ export const GET = async (request) => {
 
         const prompts = await Prompt.find({});
 
-        return new Response(JSON.stringify(prompts), { status: 200 })
+        const response = new Response(JSON.stringify(prompts), { status: 200 });
+
+        // Disable caching for serverless function response
+        response.headers.set("Cache-Control", "no-store, max-age=0");
+
+        return response;
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        return new Response("Failed to fetch all prompts", { status: 500 });
     }
-} 
+}
