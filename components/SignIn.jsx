@@ -3,6 +3,7 @@ import { React, useState, useEffect } from "react";
 import style from "./signin.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import swal from "sweetalert";
 import { AiFillGooglePlusCircle } from "react-icons/ai";
 import { signIn, getProviders } from "next-auth/react";
 const SignIn = () => {

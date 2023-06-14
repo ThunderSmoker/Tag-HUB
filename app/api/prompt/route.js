@@ -3,13 +3,20 @@ import { connectToDB } from "@utils/database";
 import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
-    try {
-        await connectToDB()
+  try {
+    await connectToDB();
 
-        const prompts = await Prompt.find({});
+    const prompts = await Prompt.find({});
 
-        return new NextResponse(JSON.stringify(prompts), { status: 200 })
-    } catch (error) {
-        return new NextResponse("Failed to fetch all prompts", { status: 500 })
-    }
-} 
+    const cacheControl = "no-store, no-cache"; // Set cache control to disable storing
+
+    return new NextResponse(JSON.stringify(prompts), {
+      status: 200,
+      headers: {
+        "Cache-Control": cacheControl,
+      },
+    });
+  } catch (error) {
+    return new NextResponse("Failed to fetch all prompts", { status: 500 });
+  }
+};
