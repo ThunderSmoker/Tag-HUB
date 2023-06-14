@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
+import { useState} from "react";
 import PromptCard from "./PromptCard";
-
+import useSWR from 'swr'
+import { set } from "mongoose";
 const PromptCardList = ({ data, handleTagClick }) => {
   return (
     <div className="mt-16 prompt_layout">
@@ -25,17 +25,23 @@ const Feed = () => {
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState([]);
+  //old approach
+  // const fetchPosts = async () => {
+  //   const response = await fetch("/api/prompt");
+  //   const data = await response.json();
+  //   console.log(data);
+  //   setAllPosts(data);
+  // };
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
 
-  const fetchPosts = async () => {
-    const response = await fetch("/api/prompt");
-    const data = await response.json();
-    console.log(data);
-    setAllPosts(data);
-  };
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
+  //NEW SWR
+  const fetcher = (...args) => fetch(...args).then(res => res.json()).then(data => setAllPosts(data))
+  const { data, error, isLoading } = useSWR('/api/prompt', fetcher)
+  console.log(data);
+  if (error) return <div>failed to load</div>
+  if (isLoading) return <div>loading...</div>
   const filterPrompts = (searchtext) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return allPosts.filter(
