@@ -41,7 +41,7 @@ const Feed = () => {
   const { data, error, isLoading } = useSWR('/api/prompt', fetcher)
   console.log(data);
   if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  if (isLoading) return <div className="mt-10">LOADING...</div>
   const filterPrompts = (searchtext) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return allPosts.filter(

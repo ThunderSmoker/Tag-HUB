@@ -1,6 +1,6 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import useSWR from 'swr'
+import {useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Profile from "@components/Profile";
@@ -10,17 +10,18 @@ const UserProfile = ({ params }) => {
   const userName = searchParams.get("name");
 
   const [userPosts, setUserPosts] = useState([]);
+  const fetcher = (...args) => fetch(...args).then(res => res.json()).then(data => setUserPosts(data))
+  const { res, error, isLoading } = useSWR(`/api/users/${params.id}/posts`, fetcher)
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     const response = await fetch(`/api/users/${params?.id}/posts`);
+  //     const data = await response.json();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${params?.id}/posts`);
-      const data = await response.json();
+  //     setUserPosts(data);
+  //   };
 
-      setUserPosts(data);
-    };
-
-    if (params?.id) fetchPosts();
-  }, [params.id]);
+  //   if (params?.id) fetchPosts();
+  // }, [params.id]);
 
   return (
     <Profile

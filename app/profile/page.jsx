@@ -1,37 +1,38 @@
 "use client";
 import swal from "sweetalert";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
+import { useState } from "react";
+import  {useRouter}  from "next/navigation";
+import useSWR from 'swr'
 import Profile from "@components/Profile";
 
 const MyProfile = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session ,status} = useSession();
   const [myPosts, setMyPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
+  const fetcher = (...args) => fetch(...args).then(res => res.json()).then(data => setMyPosts(data))
+  const { res, error, isLoading } = useSWR(`/api/users/${session?.user.id}/posts`, fetcher)
+  const router =useRouter()
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
      
-      // const userData = {
-      //   email: session?.user.email,
-      // };
-      const response = await fetch(`/api/users/${session?.user.id}/posts`,);
-      // const response = await fetch(`/api/users/${session?.user.id}/posts`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(userData),
-      // });
-      const data = await response.json();
+  //     // const userData = {
+  //     //   email: session?.user.email,
+  //     // };
+  //     const response = await fetch(`/api/users/${session?.user.id}/posts`,);
+  //     // const response = await fetch(`/api/users/${session?.user.id}/posts`, {
+  //     //   method: "POST",
+  //     //   headers: {
+  //     //     "Content-Type": "application/json",
+  //     //   },
+  //     //   body: JSON.stringify(userData),
+  //     // });
+  //     const data = await response.json();
 
-      setMyPosts(data);
-    };
+  //     setMyPosts(data);
+  //   };
 
-    if (session?.user.id) fetchPosts();
-  }, [session?.user.id]);
+  //   if (session?.user.id) fetchPosts();
+  // }, [session?.user.id]);
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);
@@ -85,7 +86,8 @@ const MyProfile = () => {
 
     
   };
-
+ if(status === "unauthenticated") router.push("/sign-in");
+ else
   return (
     <Profile
       name="My"

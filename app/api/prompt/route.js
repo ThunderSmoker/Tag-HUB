@@ -1,5 +1,6 @@
 import Prompt from "@models/prompt";
 import { connectToDB } from "@utils/database";
+import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
     try {
@@ -7,8 +8,8 @@ export const GET = async (request) => {
 
         const prompts = await Prompt.find({});
 
-        return new Response(JSON.stringify(prompts), { status: 200 })
+        return new NextResponse(JSON.stringify(prompts), { status: 200 })
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        return new NextResponse("Failed to fetch all prompts", { status: 500 })
     }
 } 

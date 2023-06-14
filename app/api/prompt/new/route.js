@@ -2,6 +2,7 @@ import Prompt from "@models/prompt";
 import { connectToDB } from "@utils/database";
 import User from "@models/user";
 import MyUser from "@models/myuser";
+import { NextResponse } from "next/server";
 export const POST = async (request) => {
     const { userId,creatorModel, prompt, tag } = await request.json();
 
@@ -18,8 +19,8 @@ export const POST = async (request) => {
         const newPrompt = new Prompt({ creator: user,creatorModel, prompt, tag });
 
         await newPrompt.save();
-        return new Response(JSON.stringify(newPrompt), { status: 201 })
+        return new NextResponse(JSON.stringify(newPrompt), { status: 201 })
     } catch (error) {
-        return new Response("Failed to create a new prompt", { status: 500 });
+        return new NextResponse("Failed to create a new prompt", { status: 500 });
     }
 }

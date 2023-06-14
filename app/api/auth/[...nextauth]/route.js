@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
+import bcrypt from 'bcrypt';
 import User from '@models/user';
 import MyUser from '@models/myuser';
 import { connectToDB } from '@utils/database';
@@ -28,12 +28,12 @@ const handler = NextAuth({
             if (userExists) {
               throw new Error("Username or email already exists");
             }
-
+            const hashedPassword = await bcrypt.hash(password, 10);
             // Create a new user
             const newUser = await MyUser.create({
               username,
               email,
-              password,
+              password: hashedPassword,
             });
 
             return Promise.resolve(newUser);
@@ -43,8 +43,8 @@ const handler = NextAuth({
 
             // Authenticate the user
             const user = await MyUser.findOne({ username });
-       
-            if (user && user.password==password) {
+            
+            if (user && (await bcrypt.compare(password, user.password))) {
            
               return Promise.resolve(user);
             } else {

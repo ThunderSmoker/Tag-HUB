@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import MyUser from "@models/myuser";
 import { connectToDB } from "@utils/database";
+import { NextResponse } from "next/server";
 
 export const POST = async (request) => {
     const { username,email,password } = await request.json();
@@ -11,10 +12,10 @@ export const POST = async (request) => {
         const userEmailExists = await MyUser.findOne({email});
        
         if (userNameExists) {
-            return new Response("User already exists", { status: 409 });
+            return new NextResponse("User already exists", { status: 409 });
         }
         if (userEmailExists) {
-            return new Response("Email already exists", { status: 410 });
+            return new NextResponse("Email already exists", { status: 410 });
         }
 
         // Create a new user with hashed password
