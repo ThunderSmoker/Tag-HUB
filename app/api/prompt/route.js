@@ -12,9 +12,6 @@ export const GET = async (request) => {
 
     return new NextResponse(JSON.stringify(prompts), {
       status: 200,
-      headers: {
-        "Cache-Control": cacheControl,
-      },
     });
   } catch (error) {
     return new NextResponse("Failed to fetch all prompts", { status: 500 });
