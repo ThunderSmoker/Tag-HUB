@@ -6,7 +6,10 @@ export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     console.log(params.id);
-    const prompts = await Prompt.find({})
+    const prompts = await Prompt.find({});
+    if(params.id == 'all'){
+        return new NextResponse(JSON.stringify(prompts), { status: 200 });
+    }
     let userPrompts = prompts.filter((prompt) => {
         return prompt.creator._id == params.id;
     })
