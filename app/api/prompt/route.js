@@ -8,7 +8,7 @@ export const GET = async (request) => {
 
     const prompts = await Prompt.find({});
 
-    const cacheControl = "no-store, no-cache"; // Set cache control to disable storing
+    // const cacheControl = "no-store, no-cache"; // Set cache control to disable storing
 
     return new NextResponse(JSON.stringify(prompts), {
       status: 200,
