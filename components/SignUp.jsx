@@ -6,7 +6,11 @@ import Link from "next/link";
 import { AiFillGooglePlusCircle } from "react-icons/ai";
 import { signIn, getProviders } from "next-auth/react";
 import swal from "sweetalert";
-
+import { set } from "mongoose";
+import { format } from "date-fns";
+import  {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import { firebaseStorage } from "@utils/firebase";
+import { convertToPNG,resizeImage } from "@utils/Image";
 const SignUp = () => {
   const usernameRegex =
     /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
@@ -20,6 +24,8 @@ const SignUp = () => {
   const [providers, setProviders] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   useEffect(() => {
     (async () => {
       const res = await getProviders();
@@ -50,12 +56,16 @@ const SignUp = () => {
       setErrmsg("*Passwords do not match");
       return;
     }
-
+    let imageUrl ="";
+    if(imageFile){
+      imageUrl=await handleImageUpload(imageFile);
+    }
     // Continue with form submission
     const userData = {
       username,
       email,
       password,
+      imageUrl,
     };
 
     // console.log(userData);
@@ -67,14 +77,14 @@ const SignUp = () => {
         username: userData.username,
         email: userData.email,
         password: userData.password,
+        imageUrl: userData.imageUrl,
         redirect: false,
       });
-      if (response.error==null) {
+      if (response.error == null) {
         // Handle successful response
         console.log("User created successfully");
         window.location.href = "/";
-      }
-      else{
+      } else {
         swal("Error", response.error, "error");
         console.log(response.error);
       }
@@ -110,6 +120,30 @@ const SignUp = () => {
     }
   };
 
+  const handleImageUpload = async (imageFile) => {
+    try{
+      console.log("Uploading image file...");
+      if(imageFile.type !== "image/png"){
+        const convertedImage = await convertToPNG(imageFile);
+        imageFile = convertedImage;
+      }
+      const resizedImage = await resizeImage(imageFile, 512, 512);
+      const currentDate = format(new Date(), "yyyyMMdd_HHmmss");
+      const fileName = `${currentDate}_${imageFile.name}`;
+      const storageRef = ref(firebaseStorage, `images/${fileName}`);
+    
+      // Upload the image file to the storage bucket
+      const snapshot = await uploadBytes(storageRef, resizedImage);
+      
+      // Get the download URL of the uploaded image
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      // Set the image URL in your component's state or any other data structure
+      return downloadURL;
+    } catch (error) {
+      console.log("Error handling image: ", error);
+    }
+  };
   const handleGoogleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -151,6 +185,9 @@ const SignUp = () => {
     return strength;
   };
 
+  const handleImagePreview = async (file) => {
+    setPreviewImage(URL.createObjectURL(file));
+  };
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
@@ -170,6 +207,7 @@ const SignUp = () => {
       }}
       className="w-full min-h-screen"
     >
+      
       <div className={style.box}>
         <div className={style.square} style={{ "--i": 0 }}></div>
         <div className={style.square} style={{ "--i": 1 }}></div>
@@ -217,6 +255,26 @@ const SignUp = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+              <div className={style.inputBx}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>{ handleImagePreview(e.target.files[0]);setImageFile(e.target.files[0])}}
+                />
+              </div>
+              {previewImage && (
+                <div>
+                  <h3>Preview Image:</h3>
+                  <div className="h-20 w-20">
+                    <img
+                      style={{ objectFit: "contain" }}
+                      src={previewImage}
+                      alt="Preview"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className={style.inputBx}>
                 <input
                   type="password"

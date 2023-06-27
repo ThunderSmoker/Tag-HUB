@@ -27,7 +27,7 @@ const Feed = () => {
   const [searchedResults, setSearchedResults] = useState([]);
   //old approach
   // const fetchPosts = async () => {
-  //   const response = await fetch("/api/prompt");
+  //   const response = await fetch("/api/post");
   //   const data = await response.json();
   //   console.log(data);
   //   setAllPosts(data);
@@ -38,7 +38,7 @@ const Feed = () => {
 
   //NEW SWR
   const fetcher = (...args) => fetch(...args).then(res => res.json()).then(data => setAllPosts(data))
-  const { data, error, isLoading } = useSWR('/api/prompt/all', fetcher)
+  const { data, error, isLoading } = useSWR('/api/post/all', fetcher)
   console.log(data);
   if (error) return <div>failed to load</div>
   if (isLoading) return <div className="mt-10">LOADING...</div>

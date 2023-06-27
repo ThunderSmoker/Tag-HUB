@@ -5,7 +5,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
-    domains: ['lh3.googleusercontent.com', 'stickerly.pstatic.net'],
+    domains: ['lh3.googleusercontent.com', 'stickerly.pstatic.net','firebasestorage.googleapis.com'],
   },
   webpack(config, { webpack }) {
     // Add a rule for handling binary files

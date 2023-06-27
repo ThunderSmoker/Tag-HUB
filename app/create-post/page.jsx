@@ -25,7 +25,7 @@ const CreatePrompt = () => {
         creatorModel="MyUser"
       }
       console.log(session.user.id);
-      const response = await fetch("/api/prompt/new", {
+      const response = await fetch("/api/post/new", {
         method: "POST",
         body: JSON.stringify({
           prompt: post.prompt,

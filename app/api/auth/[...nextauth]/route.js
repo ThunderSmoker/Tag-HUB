@@ -21,7 +21,7 @@ const handler = NextAuth({
           // Check if the username is provided to determine if it's a sign-up or sign-in request
           if (credentials.email) {
             // Sign-up logic
-            const { username, email, password } = credentials;
+            const { username, email, password,imageUrl } = credentials;
 
             // Check if the username or email already exists
             const userExists = await MyUser.exists({ $or: [{ username }, { email }] });
@@ -30,12 +30,22 @@ const handler = NextAuth({
             }
             const hashedPassword = await bcrypt.hash(password, 10);
             // Create a new user
-            const newUser = await MyUser.create({
+            let newUser;
+          
+            if(imageUrl==undefined){
+            newUser = await MyUser.create({
               username,
               email,
               password: hashedPassword,
             });
-
+          }else{
+            newUser = await MyUser.create({
+              username,
+              email,
+              password: hashedPassword,
+              image: imageUrl,
+            });
+          }
             return Promise.resolve(newUser);
           } else {
             // Sign-in logic

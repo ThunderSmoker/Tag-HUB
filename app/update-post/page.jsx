@@ -15,7 +15,7 @@ const UpdatePrompt = () => {
 
   // useEffect(() => {
   //   const getPromptDetails = async () => {
-  //     const response = await fetch(`/api/prompt/${promptId}`);
+  //     const response = await fetch(`/api/post/${promptId}`);
   //     const data = await response.json();
 
   // setPost({
@@ -35,7 +35,7 @@ const UpdatePrompt = () => {
           tag: data.tag,
         })
       );
-  const { data, error, isLoading } = useSWR(`/api/prompt/${promptId}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/post/${promptId}`, fetcher);
   const updatePrompt = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -43,7 +43,7 @@ const UpdatePrompt = () => {
     if (!promptId) return alert("Missing PromptId!");
 
     try {
-      const response = await fetch(`/api/prompt/${promptId}`, {
+      const response = await fetch(`/api/post/${promptId}`, {
         method: "PATCH",
         body: JSON.stringify({
           prompt: post.prompt,
