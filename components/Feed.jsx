@@ -38,7 +38,7 @@ const Feed = () => {
 
   //NEW SWR
   const fetcher = (...args) => fetch(...args).then(res => res.json()).then(data => setAllPosts(data))
-  const { data, error, isLoading } = useSWR('/api/users/all/posts', fetcher)
+  const { data, error, isLoading } = useSWR('/api/prompt/all', fetcher)
   console.log(data);
   if (error) return <div>failed to load</div>
   if (isLoading) return <div className="mt-10">LOADING...</div>
