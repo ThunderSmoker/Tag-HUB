@@ -58,7 +58,7 @@ const SignUp = () => {
     }
     let imageUrl ="";
     if(imageFile){
-      imageUrl=await handleImageUpload(imageFile);
+      imageUrl=await handleImageUpload(imageFile,username,email);
     }
     // Continue with form submission
     const userData = {
@@ -120,7 +120,7 @@ const SignUp = () => {
     }
   };
 
-  const handleImageUpload = async (imageFile) => {
+  const handleImageUpload = async (imageFile,username,email) => {
     try{
       console.log("Uploading image file...");
       if(imageFile.type !== "image/png"){
@@ -128,8 +128,7 @@ const SignUp = () => {
         imageFile = convertedImage;
       }
       const resizedImage = await resizeImage(imageFile, 512, 512);
-      const currentDate = format(new Date(), "yyyyMMdd_HHmmss");
-      const fileName = `${currentDate}_${imageFile.name}`;
+      const fileName = `${username}_${email}`;
       const storageRef = ref(firebaseStorage, `images/${fileName}`);
     
       // Upload the image file to the storage bucket

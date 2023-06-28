@@ -17,7 +17,23 @@ export const GET = async (request, { params }) => {
     });
   }
 };
-
+export const DELETE = async (request, { params }) => {
+  try {
+    await connectToDB();
+    console.log(params.id);
+    const prompts = await Prompt.find({});
+    let userPrompts = prompts.map(async (prompt) => {
+        if(prompt.creator._id == params.id){
+            await prompt.remove();
+        }
+    })
+    return new NextResponse("Prompts Deleted Successfully", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Failed to delete prompts created by user", {
+      status: 500,
+    });
+  }
+};
 // export const POST = async (request) => {
 //     try{
 //         const {email} = await request.json();
