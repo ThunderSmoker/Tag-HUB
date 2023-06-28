@@ -1,4 +1,4 @@
-# TagHUB (Li)
+# TagHUB 
 
 TagHUB is a full stack Next.js CRUD application that allows users to post their thoughts along with relevant tags. It provides features for user registration and login using custom credentials as well as Google OAuth. MongoDB is used as the database to store user information and posts, while Firebase is utilized for image storage.
 
